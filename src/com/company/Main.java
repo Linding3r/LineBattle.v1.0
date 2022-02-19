@@ -9,27 +9,52 @@ public class Main {
   int enemyPower = 2500;
   int playerSoldier = 25;
   int enemySoldier = 25;
-  int attackPower;
   int playerLocation = 0;
   int enemyLocation = 20;
-  int enemyBombLocation = 0;
-  int playerBombLocation = 20;
+  final int enemyBombLocation = 0;
+  final int playerBombLocation = 20;
+  int attackPower;
+
+  //Game Status Display
+  public void gameStatus(){
+    System.out.printf("\n\nENEMY POWER:\t\t %5d",enemyPower);
+    System.out.printf("\nENEMY SOLDIER(s):\t %5d",enemySoldier);
+    System.out.printf("\nENEMY LOCATION:\t\t %5d",enemyLocation);
+    System.out.printf("\n\nPLAYER POWER:\t\t %5d",playerPower);
+    System.out.printf("\nPLAYER SOLDIER(s):\t %5d",playerSoldier);
+    System.out.printf("\nPLAYER LOCATION:\t %5d",playerLocation);
+  }
 
   //Player Location on the board
   public int playerBoard(int move){
     playerLocation += (move);
+    if (playerLocation > playerBombLocation){
+      playerLocation = playerBombLocation;
+    } else if (playerLocation < enemyBombLocation){
+      playerLocation = enemyBombLocation;
+    }
     return playerLocation;
   }
 
   //Enemy Location on the board
-  public int getEnemyLocation(int move){
-    enemyLocation += (move);
+  public int enemyBoard(int move){
+    enemyLocation -= (move);
+    if (enemyLocation > enemyBombLocation){
+      enemyLocation = enemyBombLocation;
+    }else if (enemyLocation < playerBombLocation){
+      enemyLocation = playerBombLocation;
+    }
     return enemyLocation;
   }
 
-
-  //Attack Method
-  public void attack() {
+  //Enenmy attack Method
+  public void enemyAttack() {
+    enemyAttackPowerDeduct();
+    System.out.println("Enemy has used " + attackPower + " attack power!");
+    System.out.println("The enemy has " + enemyPower + " attack power left!");
+  }
+  //Player attack Method
+  public void playerAttack() {
     playerAttackPowerDeduct();
     System.out.println("You have used " + attackPower + " attack power!");
     System.out.println("You have " + playerPower + " attack power left!");
@@ -47,6 +72,28 @@ public class Main {
     attackPower = attackDamage();
     playerPower = playerPower - attackPower;
     return playerPower;
+  }
+
+  //Planting bomb method to win the game
+  public void playerBombPlanting(){
+    System.out.println("You have reached the enemy's base!");
+    System.out.println("Press 1 to place the Bomb to win the game!");
+    int placeBomb;
+    do {
+      placeBomb = sc.nextInt();
+      if(placeBomb != 1){
+        System.out.println("Invalid input! Please try again.");
+      }
+    }while (placeBomb != 1);
+    System.out.println("You have placed the bomb!\nTo detonate the bomb and win the game, press 1 again");
+    int detonate;
+    do {
+      detonate = sc.nextInt();
+      if (detonate != 1) {
+        System.out.println("Invalid input! Please try again.");
+      }
+    }while (detonate != 1);
+    System.out.println("The Bomb has exploded\nYou have won the game!");
   }
 
   //Dice where you input either 2,3,6 depending on how many outcomes you want
@@ -75,6 +122,7 @@ public class Main {
 
   //Player move
   public void playerMove() {
+    //If player is at anemy base get option to place bomb to win the game
     System.out.println("\nChose one of the following moves:");
     System.out.println("1: Foward");
     System.out.println("2: Retreat");
@@ -86,13 +134,19 @@ public class Main {
         System.out.println("Try with another move.");
         playerMove();
       } else {
-        attack();
+        playerAttack();
       }
     } else if (move == 2) {
-      int steps = backwards();
-      playerBoard(steps);
-      System.out.println("You have moved " + steps + " tiles back!");
-      System.out.println("You are now on tile: " + playerLocation);
+      if (playerLocation == enemyBombLocation){
+        System.out.println("You are can't move further back than you base!");
+        System.out.println("Please chose a different move!");
+        playerMove();
+      }else {
+        int steps = backwards();
+        playerBoard(steps);
+        System.out.println("You have moved " + steps + " tiles back!");
+        System.out.println("You are now on tile: " + playerLocation);
+      }
     } else if (move == 1) {
       int steps = forward();
       playerBoard(steps);
@@ -111,14 +165,19 @@ public class Main {
       if (enemyPower <= 0) {
         playerMove();
       } else {
-        attack();
-      System.out.println("Enemy has Attacked you");
+        enemyAttack();
+        System.out.println("Enemy has Attacked you");
+      }
     } else if (move == 2) {
       int steps = backwards();
+      enemyBoard(steps);
       System.out.println("Enemy has moved " + steps + " tiles back!");
+      System.out.println("Enemy is now on tile: " + enemyLocation);
     } else if (move == 1) {
       int steps = forward();
+      enemyBoard(steps);
       System.out.println("Enemy has moved " + steps + " tiles forward!");
+      System.out.println("Enemy is now on tile: " + enemyLocation);
     }
   }
 
@@ -127,7 +186,8 @@ public class Main {
     do {
       playerMove();
       enemyMove();
-    } while (playerSoldier != 0 || enemySoldier != 0);
+      gameStatus();
+   } while (playerSoldier != 0 || enemySoldier != 0);
   }
 
   public static void main(String[] args) {
