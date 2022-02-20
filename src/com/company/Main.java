@@ -408,7 +408,7 @@ public class Main {
       winAllSoldiersKilled();
       winReachEnemyBase();
       //GAME STATUS IF NEEDED FOR DEBUGGING
-      gameStatus();
+      //gameStatus();
       if (winReachEnemyBase()) {
         break;
       }
@@ -431,7 +431,7 @@ public class Main {
   public static void main(String[] args) {
     Main prg = new Main();
     System.out.println("Welcome to LineBattle");
-    System.out.println("To start with you will trow a dice to decide how far from your base you will start!");
+    System.out.println("To start with you will throw a dice to decide how far from your base you will start!");
     System.out.println("The enemy will do the same but you will not know where he starts");
     System.out.println("\nGood luck!");
     prg.pressEnter();
