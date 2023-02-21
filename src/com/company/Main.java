@@ -5,103 +5,102 @@ import java.util.Scanner;
 public class Main {
 
   Scanner sc = new Scanner(System.in);
-  int playerPower = 2500;
+
+  int attackPower;
+  final int retreatPoints = 250;
   int enemyPower = 2500;
-  int playerSoldier = 25;
   int enemySoldier = 25;
-  int playerLocation = 0;
   int enemyLocation = 20;
   final int dead = 0;
   final int enemyBombLocation = 0;
-  final int playerBombLocation = 20;
-  final int retreatPoints = 250;
-  int attackPower;
   int diceNumber;
+
+  private Player player = new Player();
 
   //Game Status Display for debugging. Remove when playing
   public void gameStatus() {
     System.out.printf("\n\n\u001B[31mENEMY POWER:\t\t %5d", enemyPower);
     System.out.printf("\nENEMY SOLDIER(s):\t %5d", enemySoldier);
     System.out.printf("\nENEMY LOCATION:\t\t %5d", enemyLocation);
-    System.out.printf("\n\n\u001B[32mPLAYER POWER:\t\t %5d", playerPower);
-    System.out.printf("\n\u001B[32mPLAYER SOLDIER(s):\t %5d", playerSoldier);
-    System.out.printf("\n\u001B[32mPLAYER LOCATION:\t %5d\u001B[0m", playerLocation);
+    System.out.printf("\n\n\u001B[32mPLAYER POWER:\t\t %5d", player.getPlayerPower());
+    System.out.printf("\n\u001B[32mPLAYER SOLDIER(s):\t %5d", player.getPlayerSoldier());
+    System.out.printf("\n\u001B[32mPLAYER LOCATION:\t %5d\u001B[0m", player.getPlayerLocation());
   }
 
   //Enemy eliminating player solders method
   public void playerSoldierDeduct() {
-    int distance = playerLocation - enemyLocation;
+    int distance = player.getPlayerLocation() - enemyLocation;
     switch (distance) {
       case -5:
         System.out.println("The enemy attacked and killed 1 of your soldiers");
-        playerSoldier -= 1;
+        player.setPlayerSoldier(-1);
         break;
       case -4:
         System.out.println("The enemy attacked and killed 2 of your soldiers");
-        playerSoldier -= 2;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-2);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case -3:
         System.out.println("The enemy attacked and killed 3 of your soldiers");
-        playerSoldier -= 3;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-3);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case -2:
         System.out.println("The enemy attacked and killed 4 of your soldiers");
-        playerSoldier -= 4;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-4);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case -1:
         System.out.println("The enemy attacked and killed 5 of your soldiers");
-        playerSoldier -= 5;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-5);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 0:
         System.out.println("The enemy attacked and killed 6 of your soldiers");
-        playerSoldier -= 6;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-6);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 1:
         System.out.println("The enemy attacked and killed 5 of your soldiers");
-        playerSoldier -= 5;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-5);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 2:
         System.out.println("The enemy attacked and killed 4 of your soldiers");
-        playerSoldier -= 4;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-4);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 3:
         System.out.println("The enemy attacked and killed 3 of your soldiers");
-        playerSoldier -= 3;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-3);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 4:
         System.out.println("The enemy attacked and killed 2 of your soldiers");
-        playerSoldier -= 2;
-        if (playerSoldier < 0) {
-          playerSoldier = 0;
+        player.setPlayerSoldier(-2);
+        if (player.getPlayerSoldier() < 0) {
+          player.setPlayerSoldier(0);
         }
         break;
       case 5:
         System.out.println("The enemy attacked and killed 1 of your soldiers");
-        playerSoldier -= 1;
+        player.setPlayerSoldier(-1);
         break;
       default:
         System.out.println("The enemy attacked but was too far away to hit your soldiers!");
@@ -110,7 +109,7 @@ public class Main {
 
   //Player eliminating enemy soldiers method
   public void enemySoldierDeduct() {
-    int distance = playerLocation - enemyLocation;
+    int distance = player.getPlayerLocation() - enemyLocation;
     switch (distance) {
       case -5:
         System.out.println("It was a hit. 1 enemy soldier was killed!");
@@ -190,7 +189,7 @@ public class Main {
 
   //Win by killing all soldiers
   public boolean winAllSoldiersKilled() {
-    if (playerSoldier == dead || enemySoldier == dead) {
+    if (player.getPlayerSoldier() == dead || enemySoldier == dead) {
       return true;
     } else
       return false;
@@ -198,7 +197,7 @@ public class Main {
 
   //Win by reaching the enemies base
   public boolean winReachEnemyBase() {
-    if ((playerLocation == playerBombLocation) || (enemyLocation == enemyBombLocation)) {
+    if ((player.getPlayerLocation() == player.getPlayerBombLocation()) || (enemyLocation == enemyBombLocation)) {
       return true;
     } else
       return false;
@@ -206,7 +205,7 @@ public class Main {
 
   //Player Scout
   public void scoutAlert() {
-    int distance = playerLocation - enemyLocation;
+    int distance = player.getPlayerLocation() - enemyLocation;
     switch (distance) {
       case -2:
         System.out.println("\n\nYour scout has detected movement.\nThe enemy is 2 tiles in front of you!");
@@ -232,13 +231,13 @@ public class Main {
 
   //Player Location on the board
   public int playerBoard(int move) {
-    playerLocation += (move);
-    if (playerLocation > playerBombLocation) {
-      playerLocation = playerBombLocation;
-    } else if (playerLocation < enemyBombLocation) {
-      playerLocation = enemyBombLocation;
+    player.setPlayerLocation(+(move));
+    if (player.getPlayerLocation() > player.getPlayerBombLocation()) {
+      player.setPlayerLocation(player.getPlayerBombLocation());
+    } else if (player.getPlayerLocation() < enemyBombLocation) {
+      player.setPlayerLocation(enemyBombLocation);
     }
-    return playerLocation;
+    return player.getPlayerLocation();
   }
 
   //Enemy Location on the board
@@ -246,8 +245,8 @@ public class Main {
     enemyLocation -= (move);
     if (enemyLocation < enemyBombLocation) {
       enemyLocation = enemyBombLocation;
-    } else if (enemyLocation > playerBombLocation) {
-      enemyLocation = playerBombLocation;
+    } else if (enemyLocation > player.getPlayerBombLocation()) {
+      enemyLocation = player.getPlayerBombLocation();
     }
     return enemyLocation;
   }
@@ -266,14 +265,14 @@ public class Main {
   //Player attack Method with deducting attack power
   public int playerAttack() {
     attackPower = attackDamage();
-    playerPower = playerPower - attackPower;
-    if (playerPower < dead) {
-      playerPower = dead;
+    player.setPlayerPower(player.getPlayerPower() - attackPower);
+    if (player.getPlayerPower() < dead) {
+      player.setPlayerPower(dead);
     }
     enemySoldierDeduct();
     System.out.println("You have used " + attackPower + " attack power!");
-    System.out.println("You have " + playerPower + " attack power left!");
-    return playerPower;
+    System.out.println("You have " + player.getPlayerPower() + " attack power left!");
+    return player.getPlayerPower();
   }
 
   //Planting bomb method to win the game
@@ -326,7 +325,7 @@ public class Main {
     int move = sc.nextInt();
     switch (move) {
       case 3:
-        if (playerPower == dead) {
+        if (player.getPlayerPower() == dead) {
           System.out.println("You have no more Attack Power! You will need to retreat to gain new Attack Power!");
           System.out.println("Try with another move.");
           playerMove();
@@ -335,23 +334,23 @@ public class Main {
         }
         break;
       case 2:
-        if (playerLocation == enemyBombLocation) {
+        if (player.getPlayerLocation() == enemyBombLocation) {
           System.out.println("You are can't move further back than your base!");
           System.out.println("Please chose a different move!");
           playerMove();
         } else {
           int steps = backwards();
           playerBoard(steps);
-          playerPower += retreatPoints;
+          player.setPlayerPower(+retreatPoints);
           System.out.println("You have moved " + -steps + " tiles back!");
-          System.out.println("You are now on tile: " + playerLocation);
+          System.out.println("You are now on tile: " + player.getPlayerLocation());
         }
         break;
       case 1:
         int steps = forward();
         playerBoard(steps);
         System.out.println("You have moved " + steps + " tiles forward!");
-        System.out.println("You are now on tile: " + playerLocation);
+        System.out.println("You are now on tile: " + player.getPlayerLocation());
         break;
       default:
         System.out.println("Invalid Input, Please try again");
@@ -372,7 +371,7 @@ public class Main {
         }
         break;
       case 2:
-        if (enemyLocation == playerBombLocation) {
+        if (enemyLocation == player.getPlayerBombLocation()) {
           enemyMove();
         } else {
           steps = backwards();
@@ -391,8 +390,8 @@ public class Main {
   //Starting move where player & enemy throw dice to chose starting point on the map
   public void gameStart() {
     dice(6);
-    int playerStartPoint = playerLocation + diceNumber;
-    playerLocation += diceNumber;
+    int playerStartPoint = player.getPlayerLocation() + diceNumber;
+    player.setPlayerLocation(+diceNumber);
     System.out.println("You will be starting on tile " + playerStartPoint);
     dice(6);
     enemyLocation -= diceNumber;
@@ -416,11 +415,11 @@ public class Main {
         break;
       }
     }
-    if (playerLocation == playerBombLocation) {
+    if (player.getPlayerLocation() == player.getPlayerBombLocation()) {
       playerBombPlanting();
     } else if (enemyLocation == enemyBombLocation) {
       System.out.println("\n\"\u001B[31GAME OVER\u001B[0m\nThe enemy reached your base and successfully detonated a bomb within!\nBetter luck next time");
-    } else if (playerSoldier == dead) {
+    } else if (player.getPlayerSoldier() == dead) {
       System.out.println("\n\u001B[31GAME OVER\u001B[0m\nThe enemy managed to kill all your soldiers!\n Better luck next time");
     } else if (enemySoldier == dead) {
       System.out.println("\n\u001B[32mYOU WON\u001B[0m\nYou killed all enemy soldiers!\nGood job!");
